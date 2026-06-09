@@ -18,7 +18,10 @@ function Profile() {
     email: "", 
     password: "", 
     currentPassword: "", 
-    profileImage: "" 
+    profileImage: "",
+    riskTolerance: "Medium",
+    timeHorizon: "Long Term",
+    goal: "Growth"
   });
 
   // Centralized function to sync form state with official user state
@@ -29,7 +32,10 @@ function Profile() {
       email: userData.email || "",
       password: "",
       currentPassword: "",
-      profileImage: userData.profileImage || ""
+      profileImage: userData.profileImage || "",
+      riskTolerance: userData.riskTolerance || "Medium",
+      timeHorizon: userData.timeHorizon || "Long Term",
+      goal: userData.goal || "Growth"
     });
     setImageError(false);
   };
@@ -189,7 +195,7 @@ function Profile() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-8 border-t border-slate-100">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pt-8 border-t border-slate-100">
               <div className="space-y-1">
                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Account ID Number</p>
                 <p className="font-black text-slate-800 text-sm tracking-wide uppercase">
@@ -202,6 +208,22 @@ function Profile() {
                   {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : "March 2024"}
                 </p>
               </div>
+              {user?.role === "trader" && (
+                <>
+                  <div className="space-y-1">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Risk Profile</p>
+                    <p className="font-black text-indigo-600 text-sm">{user?.riskTolerance || "Medium"}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Time Horizon</p>
+                    <p className="font-black text-slate-800 text-sm">{user?.timeHorizon || "Long Term"}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Investment Goal</p>
+                    <p className="font-black text-slate-800 text-sm">{user?.goal || "Growth"}</p>
+                  </div>
+                </>
+              )}
             </div>
           </section>
 
@@ -315,6 +337,55 @@ function Profile() {
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:bg-white focus:border-indigo-500 outline-none transition disabled:opacity-60 disabled:cursor-not-allowed"
                   />
                 </div>
+
+                {/* TRADER PROFILE FIELDS */}
+                {user?.role === "trader" && (
+                  <>
+                    {/* RISK TOLERANCE */}
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">Risk Tolerance</label>
+                      <select 
+                        disabled={!isEditing}
+                        value={formData.riskTolerance}
+                        onChange={(e) => setFormData({...formData, riskTolerance: e.target.value})}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:bg-white focus:border-indigo-500 outline-none transition disabled:opacity-60 disabled:cursor-not-allowed"
+                      >
+                        <option value="Low">Low (Conservative)</option>
+                        <option value="Medium">Medium (Balanced)</option>
+                        <option value="High">High (Aggressive)</option>
+                      </select>
+                    </div>
+
+                    {/* TIME HORIZON */}
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">Time Horizon</label>
+                      <select 
+                        disabled={!isEditing}
+                        value={formData.timeHorizon}
+                        onChange={(e) => setFormData({...formData, timeHorizon: e.target.value})}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:bg-white focus:border-indigo-500 outline-none transition disabled:opacity-60 disabled:cursor-not-allowed"
+                      >
+                        <option value="Short Term">Short Term (Under 1 year)</option>
+                        <option value="Long Term">Long Term (Multi-year)</option>
+                      </select>
+                    </div>
+
+                    {/* INVESTMENT GOAL */}
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">Investment Goal</label>
+                      <select 
+                        disabled={!isEditing}
+                        value={formData.goal}
+                        onChange={(e) => setFormData({...formData, goal: e.target.value})}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:bg-white focus:border-indigo-500 outline-none transition disabled:opacity-60 disabled:cursor-not-allowed"
+                      >
+                        <option value="Growth">Growth (Maximize Capital Gains)</option>
+                        <option value="Income">Income (Dividends & Stability)</option>
+                        <option value="Capital Preservation">Capital Preservation (Minimizing Loss)</option>
+                      </select>
+                    </div>
+                  </>
+                )}
 
                 {/* CURRENT PASSWORD (ONLY IN EDIT MODE) */}
                 {isEditing && (

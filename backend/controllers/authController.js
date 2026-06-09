@@ -125,7 +125,7 @@ export const getProfile = async (req, res, next) => {
 export const updateProfile = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        const { username, email, password, currentPassword, profileImage } = req.body;
+        const { username, email, password, currentPassword, profileImage, riskTolerance, timeHorizon, goal } = req.body;
 
         const user = await userModel.findById(userId);
         if (!user) {
@@ -146,6 +146,9 @@ export const updateProfile = async (req, res, next) => {
         if (username) user.username = username;
         if (email) user.email = email;
         if (profileImage !== undefined) user.profileImage = profileImage;
+        if (riskTolerance) user.riskTolerance = riskTolerance;
+        if (timeHorizon) user.timeHorizon = timeHorizon;
+        if (goal) user.goal = goal;
 
         await user.save();
 
